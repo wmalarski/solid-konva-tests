@@ -3,10 +3,10 @@ import { Stage } from "konva/lib/Stage";
 import { Component, createEffect } from "solid-js";
 
 type Props = {
-  stage: Stage;
+  stage: () => Stage | undefined;
 };
 
-export const ShapesLayer: Component<Props> = (props) => {
+export const createShapesLayer: Component<Props> = (props) => {
   const layer = new Konva.Layer();
 
   const rect1 = new Konva.Rect({
@@ -22,7 +22,7 @@ export const ShapesLayer: Component<Props> = (props) => {
   layer.add(rect1);
 
   createEffect(() => {
-    props.stage.add(layer);
+    props.stage()?.add(layer);
   });
 
   return null;
