@@ -1,9 +1,15 @@
 import Konva from "konva";
 import { Component, createMemo, createSignal, Show } from "solid-js";
-import { useContainerReshape } from "./CanvasCard.utils";
+import { VideoEditorValue } from "../VideoEditor.utils";
+import { useContainerReshape } from "./CanvasStage.utils";
 import { ShapesLayer } from "./ShapesLayer/ShapesLayer";
 
-const CanvasCard: Component = () => {
+type Props = {
+  value: VideoEditorValue;
+  onValueChange: (value: VideoEditorValue) => void;
+};
+
+const CanvasStage: Component<Props> = () => {
   const [container, setContainer] = createSignal<HTMLDivElement>();
 
   const stage = createMemo(() => {
@@ -26,4 +32,4 @@ const CanvasCard: Component = () => {
   );
 };
 
-export default CanvasCard;
+export default CanvasStage;
