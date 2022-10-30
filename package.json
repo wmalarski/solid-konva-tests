@@ -1,0 +1,51 @@
+{
+  "name": "solid-konva-starter",
+  "scripts": {
+    "dev": "solid-start dev",
+    "build": "solid-start build",
+    "start": "solid-start start",
+    "=== LINTERS ===": "",
+    "lint": "eslint src --fix --ext .tsx,.ts",
+    "prettier": "prettier 'src/**/*.(ts|tsx)' --write",
+    "tsc": "tsc --noEmit",
+    "code-check": "yarn lint --max-warnings=0 && yarn tsc"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "autoprefixer": "^10.4.13",
+    "eslint": "^8.26.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-import-resolver-node": "^0.3.6",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-solid": "^0.7.4",
+    "eslint-plugin-sort-keys-fix": "^1.1.2",
+    "eslint-plugin-tailwindcss": "^3.6.2",
+    "postcss": "^8.4.18",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "solid-start-node": "0.2.2",
+    "tailwindcss": "^3.2.1",
+    "typescript": "^4.8.4",
+    "vite": "^3.2.1",
+    "vite-plugin-solid": "^2.3.10"
+  },
+  "dependencies": {
+    "@solid-primitives/i18n": "^1.1.2",
+    "@solidjs/meta": "^0.28.2",
+    "@solidjs/router": "^0.5.0",
+    "daisyui": "^2.36.1",
+    "solid-js": "1.6.1",
+    "solid-start": "0.2.2",
+    "undici": "^5.12.0",
+    "zod": "^3.19.1"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}
