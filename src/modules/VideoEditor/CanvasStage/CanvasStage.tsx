@@ -13,6 +13,9 @@ type Props = {
 const CanvasStage: Component<Props> = (props) => {
   const [container, setContainer] = createSignal<HTMLDivElement>();
 
+  const [frame, setFrame] = createSignal(0);
+  const [fps, setFps] = createSignal(0);
+
   const stage = createMemo(() => {
     const element = container();
     return element && new Konva.Stage({ container: element });

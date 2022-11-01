@@ -1,16 +1,23 @@
-import { Stage } from "konva/lib/Stage";
-import { VideoEditorValue } from "../../VideoEditor.utils";
+import { createVideoImage } from "./createVideoImage";
 
 type CreateVideoLayer = {
-  value: VideoEditorValue;
-  onValueChange: (value: VideoEditorValue) => void;
-  stage: () => Stage | undefined;
+  fps: () => number;
+  frame: () => number;
+  path: () => string;
+  onDurationChange: (duration: number) => void;
 };
 
 export const createVideoLayer = ({
-  onValueChange,
-  value,
-  stage,
+  fps,
+  frame,
+  onDurationChange,
+  path,
 }: CreateVideoLayer) => {
+  createVideoImage({
+    fps,
+    frame,
+    onDurationChange,
+    path,
+  });
   //
 };
