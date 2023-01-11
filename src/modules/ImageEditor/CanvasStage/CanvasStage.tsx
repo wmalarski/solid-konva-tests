@@ -1,12 +1,13 @@
 import Konva from "konva";
 import { Component, createMemo, createSignal } from "solid-js";
-import { VideoEditorValue } from "../VideoEditor.utils";
+import { ImageEditorValue } from "../ImageEditor.utils";
 import { useContainerReshape } from "./CanvasStage.utils";
+import { createImageLayer } from "./ImageLayer/createImageLayer";
 import { createShapesLayer } from "./ShapesLayer/createShapesLayer";
 
 type Props = {
-  value: VideoEditorValue;
-  onValueChange: (value: VideoEditorValue) => void;
+  value: ImageEditorValue;
+  onValueChange: (value: ImageEditorValue) => void;
 };
 
 const CanvasStage: Component<Props> = (props) => {
@@ -23,6 +24,10 @@ const CanvasStage: Component<Props> = (props) => {
   useContainerReshape({ container, stage });
 
   createShapesLayer({
+    stage,
+  });
+
+  createImageLayer({
     stage,
   });
 

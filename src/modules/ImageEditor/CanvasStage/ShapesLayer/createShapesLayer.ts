@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { Stage } from "konva/lib/Stage";
+import type { Stage } from "konva/lib/Stage";
 import { Component, createEffect } from "solid-js";
 
 type Props = {
