@@ -2,6 +2,7 @@ import Konva from "konva";
 import { Component, createMemo, createSignal } from "solid-js";
 import { ImageEditorValue } from "../ImageEditor.utils";
 import { useContainerReshape } from "./CanvasStage.utils";
+import { createZoom } from "./createZoom";
 import { createImageLayer } from "./ImageLayer/createImageLayer";
 import { createShapesLayer } from "./ShapesLayer/createShapesLayer";
 
@@ -12,9 +13,6 @@ type Props = {
 
 const CanvasStage: Component<Props> = (props) => {
   const [container, setContainer] = createSignal<HTMLDivElement>();
-
-  const [frame, setFrame] = createSignal(0);
-  const [fps, setFps] = createSignal(0);
 
   const stage = createMemo(() => {
     const element = container();
@@ -28,6 +26,11 @@ const CanvasStage: Component<Props> = (props) => {
   });
 
   createImageLayer({
+    path: props.value.path,
+    stage,
+  });
+
+  createZoom({
     stage,
   });
 
