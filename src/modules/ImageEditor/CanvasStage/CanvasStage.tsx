@@ -1,9 +1,8 @@
 import Konva from "konva";
 import { Component, createMemo, createSignal } from "solid-js";
 import { ImageEditorValue } from "../ImageEditor.utils";
-import { useContainerReshape } from "./CanvasStage.utils";
-import { createZoom } from "./createZoom";
-import { createShapesLayer } from "./ShapesLayer/createShapesLayer";
+import { createZoom, useContainerReshape } from "./CanvasStage.utils";
+import { ShapesLayer } from "./ShapesLayer/ShapesLayer";
 
 type Props = {
   value: ImageEditorValue;
@@ -18,10 +17,8 @@ const CanvasStage: Component<Props> = (props) => {
     return element && new Konva.Stage({ container: element });
   });
 
-  useContainerReshape({ container, stage });
-
-  createShapesLayer({
-    path: props.value.path,
+  useContainerReshape({
+    container,
     stage,
   });
 
@@ -29,7 +26,11 @@ const CanvasStage: Component<Props> = (props) => {
     stage,
   });
 
-  return <div ref={setContainer} class="grow" />;
+  return (
+    <div ref={setContainer} class="grow">
+      <ShapesLayer path={props.value.path} stage={stage()} />
+    </div>
+  );
 };
 
 export default CanvasStage;
