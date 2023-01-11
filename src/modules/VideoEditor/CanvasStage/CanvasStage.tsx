@@ -3,7 +3,6 @@ import { Component, createMemo, createSignal } from "solid-js";
 import { VideoEditorValue } from "../VideoEditor.utils";
 import { useContainerReshape } from "./CanvasStage.utils";
 import { createShapesLayer } from "./ShapesLayer/createShapesLayer";
-import { createVideoLayer } from "./VideoLayer/createVideoLayer";
 
 type Props = {
   value: VideoEditorValue;
@@ -22,12 +21,6 @@ const CanvasStage: Component<Props> = (props) => {
   });
 
   useContainerReshape({ container, stage });
-
-  createVideoLayer({
-    onValueChange: props.onValueChange,
-    stage,
-    value: props.value,
-  });
 
   createShapesLayer({
     stage,
