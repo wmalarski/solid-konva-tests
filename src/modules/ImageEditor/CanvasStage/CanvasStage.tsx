@@ -3,7 +3,6 @@ import { Component, createMemo, createSignal } from "solid-js";
 import { ImageEditorValue } from "../ImageEditor.utils";
 import { useContainerReshape } from "./CanvasStage.utils";
 import { createZoom } from "./createZoom";
-import { createImageLayer } from "./ImageLayer/createImageLayer";
 import { createShapesLayer } from "./ShapesLayer/createShapesLayer";
 
 type Props = {
@@ -22,10 +21,6 @@ const CanvasStage: Component<Props> = (props) => {
   useContainerReshape({ container, stage });
 
   createShapesLayer({
-    stage,
-  });
-
-  createImageLayer({
     path: props.value.path,
     stage,
   });

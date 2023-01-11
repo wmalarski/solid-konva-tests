@@ -8,6 +8,7 @@ const CanvasStage = lazy(() => import("./CanvasStage/CanvasStage"));
 export const ImageEditor: Component = () => {
   const [store, setStore] = createStore<ImageEditorValue>({
     path: "brown_sheep.jpg",
+    tool: "selector",
   });
 
   return (
