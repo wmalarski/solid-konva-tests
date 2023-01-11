@@ -1,7 +1,7 @@
 import Konva from "konva";
 import type { Layer } from "konva/lib/Layer";
 import type { Shape } from "konva/lib/Shape";
-import { Component, createEffect } from "solid-js";
+import { Component, createEffect, onCleanup, onMount } from "solid-js";
 import { getImage } from "~/services/image";
 
 type Props = {
@@ -16,5 +16,11 @@ export const Image: Component<Props> = (props) => {
       darthNode.moveToBottom();
     });
   });
+
+  console.log("Image");
+
+  onMount(() => console.log("Image.onMount"));
+  onCleanup(() => console.log("Image.onCleanup"));
+
   return null;
 };
