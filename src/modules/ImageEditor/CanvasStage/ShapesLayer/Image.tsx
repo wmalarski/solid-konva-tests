@@ -1,11 +1,13 @@
 import Konva from "konva";
-import type { Layer } from "konva/lib/Layer";
 import { Component, createEffect, createSignal, onCleanup } from "solid-js";
+import { SetStoreFunction } from "solid-js/store";
 import { getImage } from "~/services/image";
+import { ImageEditorValue } from "../../ImageEditor.utils";
 
 type Props = {
-  layer: Layer;
+  layer: Konva.Layer;
   path: string;
+  onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
 export const Image: Component<Props> = (props) => {
@@ -17,6 +19,12 @@ export const Image: Component<Props> = (props) => {
       props.layer.add(node);
       node.moveToBottom();
       setImage(node);
+    });
+  });
+
+  createEffect(() => {
+    image()?.on("click", () => {
+      props.onValueChange("samples", () => true, "isSelected", false);
     });
   });
 

@@ -1,13 +1,16 @@
 import Konva from "konva";
 import type { Layer } from "konva/lib/Layer";
 import { Component, createEffect, onCleanup } from "solid-js";
+import { SetStoreFunction } from "solid-js/store";
 import { Rectangle } from "~/utils/geometry";
-import { Sample } from "../../../ImageEditor.utils";
+import { ImageEditorValue, Sample } from "../../../ImageEditor.utils";
+import { Transformer } from "./Transformer";
 
 type Props = {
   layer: Layer;
   sample: Sample;
   onSampleChange: (sample: Sample) => void;
+  onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
 export const Rect: Component<Props> = (props) => {
@@ -50,19 +53,24 @@ export const Rect: Component<Props> = (props) => {
     });
   });
 
-  const tr = new Konva.Transformer({
-    enabledAnchors: ["top-left", "top-right", "bottom-left", "bottom-right"],
-  });
-  tr.nodes([rect]);
-
-  createEffect(() => {
-    props.layer.add(tr);
-  });
-
   onCleanup(() => {
     rect.remove();
-    tr.remove();
   });
 
-  return null;
+  createEffect(() => {
+    rect.on("click", () => {
+      if (!props.sample.isSelected) {
+        props.onSampleChange({ ...props.sample, isSelected: true });
+      }
+    });
+  });
+
+  return (
+    <Transformer
+      layer={props.layer}
+      onSampleChange={props.onSampleChange}
+      rect={rect}
+      sample={props.sample}
+    />
+  );
 };

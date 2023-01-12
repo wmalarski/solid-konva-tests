@@ -1,15 +1,16 @@
 import Konva from "konva";
-import type { Stage } from "konva/lib/Stage";
 import { Component, createEffect, For } from "solid-js";
-import { Sample } from "../../ImageEditor.utils";
+import { SetStoreFunction } from "solid-js/store";
+import { ImageEditorValue, Sample } from "../../ImageEditor.utils";
 import { Image } from "./Image";
 import { Rect } from "./Rect/Rect";
 
 type Props = {
   path: string;
-  stage?: Stage | undefined;
+  stage?: Konva.Stage | undefined;
   samples: Sample[];
   onSampleChange: (sample: Sample) => void;
+  onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
 export const ShapesLayer: Component<Props> = (props) => {
@@ -29,13 +30,18 @@ export const ShapesLayer: Component<Props> = (props) => {
 
   return (
     <>
-      <Image layer={layer} path={props.path} />
+      <Image
+        layer={layer}
+        onValueChange={props.onValueChange}
+        path={props.path}
+      />
       <For each={props.samples}>
         {(sample) => (
           <Rect
-            sample={sample}
             layer={layer}
             onSampleChange={props.onSampleChange}
+            onValueChange={props.onValueChange}
+            sample={sample}
           />
         )}
       </For>

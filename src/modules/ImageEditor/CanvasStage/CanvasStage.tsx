@@ -51,6 +51,7 @@ const CanvasStage: Component<Props> = (props) => {
         stage={stage()}
         samples={props.value.samples}
         onSampleChange={handleSamplesChange}
+        onValueChange={props.onValueChange}
       />
     </>
   );
