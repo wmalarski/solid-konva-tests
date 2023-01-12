@@ -1,7 +1,6 @@
 import Konva from "konva";
 import type { Layer } from "konva/lib/Layer";
-import type { Shape } from "konva/lib/Shape";
-import { Component, createEffect, onCleanup, onMount } from "solid-js";
+import { Component, createEffect, createSignal, onCleanup } from "solid-js";
 import { getImage } from "~/services/image";
 
 type Props = {
@@ -10,17 +9,20 @@ type Props = {
 };
 
 export const Image: Component<Props> = (props) => {
+  const [image, setImage] = createSignal<Konva.Image>();
+
   createEffect(() => {
-    Konva.Image.fromURL(getImage({ path: props.path }), (darthNode: Shape) => {
-      props.layer.add(darthNode);
-      darthNode.moveToBottom();
+    const url = getImage({ path: props.path });
+    Konva.Image.fromURL(url, (node: Konva.Image) => {
+      props.layer.add(node);
+      node.moveToBottom();
+      setImage(node);
     });
   });
 
-  console.log("Image");
-
-  onMount(() => console.log("Image.onMount"));
-  onCleanup(() => console.log("Image.onCleanup"));
+  onCleanup(() => {
+    image()?.remove();
+  });
 
   return null;
 };

@@ -27,19 +27,20 @@ const CanvasStage: Component<Props> = (props) => {
     stage,
   });
 
-  const handleSamplesChange = (samples: Sample[]) => {
-    props.onValueChange("samples", samples);
-    // props.onValueChange({ ...props.value, samples });
+  const handleSamplesChange = (sample: Sample) => {
+    const index = props.value.samples.findIndex((e) => e.id === sample.id);
+    props.onValueChange("samples", index, sample);
   };
 
   return (
     <>
       <button
         onClick={() => {
-          const samples = [...props.value.samples];
-          samples.pop();
-          console.log({ samples });
-          props.onValueChange({ ...props.value, samples });
+          console.log(
+            stage()
+              ?.getLayers()
+              .flatMap((l) => l.children)
+          );
         }}
       >
         Change
@@ -49,7 +50,7 @@ const CanvasStage: Component<Props> = (props) => {
         path={props.value.path}
         stage={stage()}
         samples={props.value.samples}
-        onSamplesChange={handleSamplesChange}
+        onSampleChange={handleSamplesChange}
       />
     </>
   );

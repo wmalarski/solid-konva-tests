@@ -5,10 +5,9 @@ import { Rectangle } from "~/utils/geometry";
 import { Sample } from "../../../ImageEditor.utils";
 
 type Props = {
-  index: number;
   layer: Layer;
   sample: Sample;
-  onSampleChange: (sample: Sample, index: number) => void;
+  onSampleChange: (sample: Sample) => void;
 };
 
 export const Rect: Component<Props> = (props) => {
@@ -24,7 +23,6 @@ export const Rect: Component<Props> = (props) => {
   });
 
   createEffect(() => {
-    console.log("X", rect.x(), props.sample.shape.x);
     rect.x(props.sample.shape.x);
   });
 
@@ -41,7 +39,6 @@ export const Rect: Component<Props> = (props) => {
   });
 
   createEffect(() => {
-    console.log("rect.on(dragend");
     rect.on("dragend", (event) => {
       const shape: Rectangle = {
         height: event.target.height(),
@@ -49,12 +46,22 @@ export const Rect: Component<Props> = (props) => {
         x: event.target.x(),
         y: event.target.y(),
       };
-      props.onSampleChange({ ...props.sample, shape }, props.index);
+      props.onSampleChange({ ...props.sample, shape });
     });
+  });
+
+  const tr = new Konva.Transformer({
+    enabledAnchors: ["top-left", "top-right", "bottom-left", "bottom-right"],
+  });
+  tr.nodes([rect]);
+
+  createEffect(() => {
+    props.layer.add(tr);
   });
 
   onCleanup(() => {
     rect.remove();
+    tr.remove();
   });
 
   return null;
