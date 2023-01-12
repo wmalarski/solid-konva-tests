@@ -4,6 +4,7 @@
     "konva",
     "solidjs",
     "tailwindcss",
+    "transformend",
     "undici"
   ]
 }

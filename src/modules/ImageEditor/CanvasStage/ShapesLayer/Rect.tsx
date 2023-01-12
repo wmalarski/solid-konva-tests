@@ -16,8 +16,10 @@ export const Rect: Component<Props> = (props) => {
   const rect = new Konva.Rect({
     draggable: true,
     fill: "green",
+    opacity: 0.5,
     stroke: "black",
-    strokeWidth: 4,
+    strokeScaleEnabled: false,
+    strokeWidth: 1,
   });
 
   createEffect(() => {
@@ -46,17 +48,11 @@ export const Rect: Component<Props> = (props) => {
 
   createEffect(() => {
     rect.on("dragend", (event) => {
-      const shape: Rectangle = {
-        height: event.target.height(),
-        width: event.target.width(),
-        x: event.target.x(),
-        y: event.target.y(),
-      };
       props.onValueChange(
         "samples",
         (entry) => entry.id === props.sample.id,
         "shape",
-        shape
+        { x: event.target.x(), y: event.target.y() }
       );
     });
   });
@@ -78,6 +74,25 @@ export const Rect: Component<Props> = (props) => {
         (entry) => entry.id !== props.sample.id,
         "isSelected",
         false
+      );
+    });
+  });
+
+  createEffect(() => {
+    rect.on("transformend", (event) => {
+      const shape: Rectangle = {
+        height: event.target.height() * event.target.scaleY(),
+        width: event.target.width() * event.target.scaleX(),
+        x: event.target.x(),
+        y: event.target.y(),
+      };
+      event.target.scaleX(1);
+      event.target.scaleY(1);
+      props.onValueChange(
+        "samples",
+        (entry) => entry.id === props.sample.id,
+        "shape",
+        shape
       );
     });
   });
