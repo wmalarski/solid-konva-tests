@@ -1,7 +1,7 @@
 import Konva from "konva";
 import { Component, createMemo, createSignal } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
-import { ImageEditorValue, Sample } from "../ImageEditor.utils";
+import { ImageEditorValue } from "../ImageEditor.utils";
 import { createZoom, useContainerReshape } from "./CanvasStage.utils";
 import { ShapesLayer } from "./ShapesLayer/ShapesLayer";
 
@@ -27,30 +27,13 @@ const CanvasStage: Component<Props> = (props) => {
     stage,
   });
 
-  const handleSamplesChange = (sample: Sample) => {
-    const index = props.value.samples.findIndex((e) => e.id === sample.id);
-    props.onValueChange("samples", index, sample);
-  };
-
   return (
     <>
-      <button
-        onClick={() => {
-          console.log(
-            stage()
-              ?.getLayers()
-              .flatMap((l) => l.children)
-          );
-        }}
-      >
-        Change
-      </button>
       <div ref={setContainer} class="grow" />
       <ShapesLayer
         path={props.value.path}
         stage={stage()}
         samples={props.value.samples}
-        onSampleChange={handleSamplesChange}
         onValueChange={props.onValueChange}
       />
     </>

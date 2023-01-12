@@ -1,6 +1,7 @@
 import Konva from "konva";
 import { Component, createEffect, onCleanup } from "solid-js";
-import { Sample } from "../../../ImageEditor.utils";
+import { SetStoreFunction } from "solid-js/store";
+import { ImageEditorValue, Sample } from "../../ImageEditor.utils";
 
 const allAnchors = ["top-left", "bottom-left", "bottom-right", "top-right"];
 
@@ -8,7 +9,7 @@ type Props = {
   layer: Konva.Layer;
   rect: Konva.Rect;
   sample: Sample;
-  onSampleChange: (sample: Sample) => void;
+  onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
 export const Transformer: Component<Props> = (props) => {

@@ -3,13 +3,12 @@ import type { Layer } from "konva/lib/Layer";
 import { Component, createEffect, onCleanup } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
 import { Rectangle } from "~/utils/geometry";
-import { ImageEditorValue, Sample } from "../../../ImageEditor.utils";
+import { ImageEditorValue, Sample } from "../../ImageEditor.utils";
 import { Transformer } from "./Transformer";
 
 type Props = {
   layer: Layer;
   sample: Sample;
-  onSampleChange: (sample: Sample) => void;
   onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
@@ -42,6 +41,10 @@ export const Rect: Component<Props> = (props) => {
   });
 
   createEffect(() => {
+    rect.draggable(props.sample.isSelected);
+  });
+
+  createEffect(() => {
     rect.on("dragend", (event) => {
       const shape: Rectangle = {
         height: event.target.height(),
@@ -49,7 +52,33 @@ export const Rect: Component<Props> = (props) => {
         x: event.target.x(),
         y: event.target.y(),
       };
-      props.onSampleChange({ ...props.sample, shape });
+      props.onValueChange(
+        "samples",
+        (entry) => entry.id === props.sample.id,
+        "shape",
+        shape
+      );
+    });
+  });
+
+  createEffect(() => {
+    rect.on("click", () => {
+      if (props.sample.isSelected) {
+        return;
+      }
+
+      props.onValueChange(
+        "samples",
+        (entry) => entry.id === props.sample.id,
+        "isSelected",
+        true
+      );
+      props.onValueChange(
+        "samples",
+        (entry) => entry.id !== props.sample.id,
+        "isSelected",
+        false
+      );
     });
   });
 
@@ -57,18 +86,10 @@ export const Rect: Component<Props> = (props) => {
     rect.remove();
   });
 
-  createEffect(() => {
-    rect.on("click", () => {
-      if (!props.sample.isSelected) {
-        props.onSampleChange({ ...props.sample, isSelected: true });
-      }
-    });
-  });
-
   return (
     <Transformer
       layer={props.layer}
-      onSampleChange={props.onSampleChange}
+      onValueChange={props.onValueChange}
       rect={rect}
       sample={props.sample}
     />
