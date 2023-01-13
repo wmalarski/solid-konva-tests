@@ -1,14 +1,13 @@
 import Konva from "konva";
 import { Component, createEffect, For } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
-import { ImageEditorValue, Sample } from "../../ImageEditor.utils";
+import { ImageEditorValue } from "../../ImageEditor.utils";
 import { Image } from "./Image";
 import { Rect } from "./Rect";
 
 type Props = {
-  path: string;
   stage?: Konva.Stage | undefined;
-  samples: Sample[];
+  value: ImageEditorValue;
   onValueChange: SetStoreFunction<ImageEditorValue>;
 };
 
@@ -27,19 +26,48 @@ export const ShapesLayer: Component<Props> = (props) => {
     });
   });
 
+  // const [newShape, setNewShape] = createSignal<Konva.Rect>();
+
+  createEffect(() => {
+    // const existingRect = newShape();
+
+    layer.on("click", (event) => {
+      if (props.value.tool !== "creator") {
+        return;
+      }
+
+      const newRect = new Konva.Rect({
+        fill: "green",
+        opacity: 0.5,
+        stroke: "black",
+        strokeScaleEnabled: false,
+        strokeWidth: 1,
+        x: event.evt.x,
+        y: event.evt.y,
+      });
+
+      layer.add(newRect);
+
+      // setNewShape(newRect);
+    });
+  });
+
+  // createEffect(() => {});
+
   return (
     <>
       <Image
         layer={layer}
         onValueChange={props.onValueChange}
-        path={props.path}
+        path={props.value.path}
       />
-      <For each={props.samples}>
+      <For each={props.value.samples}>
         {(sample) => (
           <Rect
             layer={layer}
             onValueChange={props.onValueChange}
             sample={sample}
+            value={props.value}
           />
         )}
       </For>

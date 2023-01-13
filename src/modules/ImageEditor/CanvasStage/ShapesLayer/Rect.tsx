@@ -1,5 +1,4 @@
 import Konva from "konva";
-import type { Layer } from "konva/lib/Layer";
 import { Component, createEffect, onCleanup } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
 import { Rectangle } from "~/utils/geometry";
@@ -7,9 +6,10 @@ import { ImageEditorValue, Sample } from "../../ImageEditor.utils";
 import { Transformer } from "./Transformer";
 
 type Props = {
-  layer: Layer;
-  sample: Sample;
+  layer: Konva.Layer;
   onValueChange: SetStoreFunction<ImageEditorValue>;
+  sample: Sample;
+  value: ImageEditorValue;
 };
 
 export const Rect: Component<Props> = (props) => {
@@ -59,7 +59,7 @@ export const Rect: Component<Props> = (props) => {
 
   createEffect(() => {
     rect.on("click", () => {
-      if (props.sample.isSelected) {
+      if (props.sample.isSelected || props.value.tool !== "selector") {
         return;
       }
 

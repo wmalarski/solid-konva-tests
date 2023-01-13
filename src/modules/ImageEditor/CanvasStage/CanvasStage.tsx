@@ -31,9 +31,8 @@ const CanvasStage: Component<Props> = (props) => {
     <>
       <div ref={setContainer} class="grow" />
       <ShapesLayer
-        path={props.value.path}
+        value={props.value}
         stage={stage()}
-        samples={props.value.samples}
         onValueChange={props.onValueChange}
       />
     </>

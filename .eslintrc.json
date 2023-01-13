@@ -92,6 +92,7 @@
         "enforceForJSX": true
       }
     ],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "tailwindcss/no-custom-classname": 0
   }
 }

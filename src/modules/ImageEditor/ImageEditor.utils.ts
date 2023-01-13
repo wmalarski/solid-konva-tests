@@ -8,6 +8,6 @@ export type Sample = {
 
 export type ImageEditorValue = {
   path: string;
-  tool: "selector" | "drag" | "creator";
+  tool: "selector" | "creator";
   samples: Sample[];
 };

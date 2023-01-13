@@ -2,6 +2,7 @@ import { Component, For, lazy, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { ImageEditorValue } from "./ImageEditor.utils";
+import { ToolSelector } from "./ToolSelector/ToolSelector";
 
 const CanvasStage = lazy(() => import("./CanvasStage/CanvasStage"));
 
@@ -29,6 +30,7 @@ export const ImageEditor: Component = () => {
         <CanvasStage value={store} onValueChange={setStore} />
       </Show>
       <div>
+        <ToolSelector onValueChange={setStore} value={store} />
         <For each={store.samples}>
           {(sample) => <pre>{JSON.stringify(sample, null, 2)}</pre>}
         </For>
