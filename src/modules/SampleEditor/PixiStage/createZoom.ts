@@ -1,19 +1,20 @@
 import * as PIXI from "pixi.js";
-import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { createEffect, onCleanup, onMount } from "solid-js";
 import { Point2D } from "~/utils/geometry";
+import { useZoomParams } from "../SampleEditor.utils";
+
+const scaleBy = 1.1;
 
 type CreateZoomState = {
-  scaleBy: number;
-  stageScale: number;
-  stageX: number;
-  stageY: number;
+  scale: number;
+  x: number;
+  y: number;
 };
 
 const defaultZoomState: CreateZoomState = {
-  scaleBy: 1.1,
-  stageScale: 1,
-  stageX: 0,
-  stageY: 0,
+  scale: 1,
+  x: 0,
+  y: 0,
 };
 
 const getNewZoomState = (
@@ -21,12 +22,12 @@ const getNewZoomState = (
   point: Point2D,
   old: CreateZoomState
 ): CreateZoomState => {
-  const { stageX, stageY, stageScale } = old;
+  const { x: stageX, y: stageY, scale: stageScale } = old;
   const mouseX = point.x / stageScale - stageX / stageScale;
   const mouseY = point.y / stageScale - stageY / stageScale;
   const newStageX = -(mouseX - point.x / newScale) * newScale;
   const newStageY = -(mouseY - point.y / newScale) * newScale;
-  return { ...old, stageScale: newScale, stageX: newStageX, stageY: newStageY };
+  return { ...old, scale: newScale, x: newStageX, y: newStageY };
 };
 
 type Props = {
@@ -34,26 +35,25 @@ type Props = {
 };
 
 export const createZoom = (props: Props) => {
-  const [state, setState] = createSignal(defaultZoomState);
+  const { setZoomParams, zoomParams } = useZoomParams();
 
   const resetZoom = () => {
-    setState(defaultZoomState);
+    setZoomParams(defaultZoomState);
   };
 
   const zoomIn = (point: Point2D) => {
-    setState((state) =>
-      getNewZoomState(state.stageScale * state.scaleBy, point, state)
-    );
+    const state = zoomParams();
+    setZoomParams(getNewZoomState(state.scale * scaleBy, point, state));
   };
 
   const zoomOut = (point: Point2D) => {
-    setState((state) =>
-      getNewZoomState(state.stageScale / state.scaleBy, point, state)
-    );
+    const state = zoomParams();
+    setZoomParams(getNewZoomState(state.scale / scaleBy, point, state));
   };
 
   const setZoom = (point: Point2D, scale: number) => {
-    setState((state) => getNewZoomState(scale, point, state));
+    const state = zoomParams();
+    setZoomParams(getNewZoomState(scale, point, state));
   };
 
   const onWheel = (event: PIXI.FederatedWheelEvent) => {
@@ -66,10 +66,10 @@ export const createZoom = (props: Props) => {
   };
 
   createEffect(() => {
-    const value = state();
-    props.app.stage.x = value.stageX;
-    props.app.stage.y = value.stageY;
-    props.app.stage.scale.set(value.stageScale);
+    const state = zoomParams();
+    props.app.stage.x = state.x;
+    props.app.stage.y = state.y;
+    props.app.stage.scale.set(state.scale);
   });
 
   onMount(() => {
