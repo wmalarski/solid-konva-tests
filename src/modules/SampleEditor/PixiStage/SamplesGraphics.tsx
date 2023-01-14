@@ -1,21 +1,20 @@
 import * as PIXI from "pixi.js";
 import { Component, onCleanup, onMount } from "solid-js";
+import { usePixiContext } from "./PixiContext";
 import { Rectangle } from "./Rectangle";
 
-type Props = {
-  app: PIXI.Application;
-};
+export const SamplesGraphics: Component = () => {
+  const ctx = usePixiContext();
 
-export const SamplesGraphics: Component<Props> = (props) => {
   const graphics = new PIXI.Graphics();
   graphics.zIndex = 1;
 
   onMount(() => {
-    props.app.stage.addChild(graphics);
+    ctx.app.stage.addChild(graphics);
   });
 
   onCleanup(() => {
-    props.app.stage.removeChild(graphics);
+    ctx.app.stage.removeChild(graphics);
   });
 
   return (
