@@ -15,8 +15,7 @@ export const ImageSprite: Component<Props> = (props) => {
   onMount(() => {
     PIXI.Assets.load(getImage({ path: props.path })).then((value) => {
       const sprite = new PIXI.Sprite(value);
-      ctx.app.stage.addChild(sprite);
-      sprite.zIndex = 0;
+      ctx.app.stage.addChildAt(sprite, 0);
       setSprite(sprite);
       return;
     });

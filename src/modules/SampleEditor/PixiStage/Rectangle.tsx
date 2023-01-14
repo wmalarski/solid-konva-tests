@@ -1,20 +1,40 @@
 import * as PIXI from "pixi.js";
-import { Component, createEffect } from "solid-js";
+import { Component, createEffect, onCleanup, onMount } from "solid-js";
+import { Sample } from "../SampleEditor.utils";
+import { usePixiContext } from "./PixiContext";
 
 type Props = {
-  graphics: PIXI.Graphics;
+  sample: Sample;
 };
 
 export const Rectangle: Component<Props> = (props) => {
-  // const ctx = usePixiContext();
+  const ctx = usePixiContext();
+
+  const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
 
   createEffect(() => {
-    props.graphics.beginFill(0xde3249);
-    props.graphics.drawRect(50, 50, 100, 100);
-    props.graphics.endFill();
+    sprite.x = props.sample.shape.x;
   });
 
-  // const r = new PIXI.Rectangle(10, 20, 30, 40);
+  createEffect(() => {
+    sprite.y = props.sample.shape.y;
+  });
+
+  createEffect(() => {
+    sprite.height = props.sample.shape.height;
+  });
+
+  createEffect(() => {
+    sprite.width = props.sample.shape.width;
+  });
+
+  onMount(() => {
+    ctx.app.stage.addChild(sprite);
+  });
+
+  onCleanup(() => {
+    ctx.app.stage.removeChild(sprite);
+  });
 
   return null;
 };

@@ -1,13 +1,17 @@
 import * as PIXI from "pixi.js";
-import { Component, onCleanup, onMount } from "solid-js";
+import { Component, For, onCleanup, onMount } from "solid-js";
+import { Sample } from "../SampleEditor.utils";
 import { usePixiContext } from "./PixiContext";
 import { Rectangle } from "./Rectangle";
 
-export const SamplesGraphics: Component = () => {
+type Props = {
+  samples: Sample[];
+};
+
+export const SamplesGraphics: Component<Props> = (props) => {
   const ctx = usePixiContext();
 
   const graphics = new PIXI.Graphics();
-  graphics.zIndex = 1;
 
   onMount(() => {
     ctx.app.stage.addChild(graphics);
@@ -18,8 +22,6 @@ export const SamplesGraphics: Component = () => {
   });
 
   return (
-    <>
-      <Rectangle graphics={graphics} />
-    </>
+    <For each={props.samples}>{(sample) => <Rectangle sample={sample} />}</For>
   );
 };
