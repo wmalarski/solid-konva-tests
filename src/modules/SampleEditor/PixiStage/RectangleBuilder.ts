@@ -4,13 +4,11 @@ import { SetStoreFunction } from "solid-js/store";
 import {
   Sample,
   SampleEditorValue,
-  Tool,
   useSelectedId,
 } from "../SampleEditor.utils";
 import { usePixiContext } from "./PixiContext";
 
 type Props = {
-  tool: Tool;
   onValueChange: SetStoreFunction<SampleEditorValue>;
 };
 
@@ -23,20 +21,22 @@ export const RectangleBuilder: Component<Props> = (props) => {
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const target = drawTarget();
     if (target) {
-      target.parent.toLocal(event.global, undefined, target.position);
+      const [x1, x2] = [event.global.x, target.x].sort((a, b) => a - b);
+      const [y1, y2] = [event.global.y, target.y].sort((a, b) => a - b);
+
+      target.x = x1;
+      target.y = y1;
+      target.width = x2 - x1;
+      target.height = y2 - y1;
     }
   };
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
-    if (props.tool !== "creator") {
-      return;
-    }
-
     const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
     sprite.x = event.globalX;
     sprite.y = event.globalY;
-    sprite.width = 100;
-    sprite.height = 100;
+    sprite.width = 0;
+    sprite.height = 0;
 
     ctx.app.stage.addChild(sprite);
     ctx.app.stage.on("pointermove", onDragMove);
@@ -62,10 +62,10 @@ export const RectangleBuilder: Component<Props> = (props) => {
         },
       };
 
+      setSelectedId(newSample.id);
+
       props.onValueChange("samples", (samples) => [...samples, newSample]);
       props.onValueChange("tool", "selector");
-
-      setSelectedId(newSample.id);
     }
   };
 

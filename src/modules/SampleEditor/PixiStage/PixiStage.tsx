@@ -33,10 +33,9 @@ const PixiStage: Component<Props> = (props) => {
     <PixiContextProvider app={app} onValueChange={props.onValueChange}>
       <ImageSprite path={props.value.path} />
       <SamplesGraphics samples={props.value.samples} tool={props.value.tool} />
-      <RectangleBuilder
-        tool={props.value.tool}
-        onValueChange={props.onValueChange}
-      />
+      {props.value.tool === "creator" ? (
+        <RectangleBuilder onValueChange={props.onValueChange} />
+      ) : null}
     </PixiContextProvider>
   );
 };
