@@ -2,10 +2,10 @@ import * as PIXI from "pixi.js";
 import { Component, onCleanup, onMount } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
 import { SampleEditorValue } from "../SampleEditor.utils";
-import { createZoom } from "./createZoom";
 import { ImageSprite } from "./ImageSprite";
 import { PixiContextProvider } from "./PixiContext";
 import { RectanglesGroup } from "./RectanglesGroup/RectanglesGroup";
+import { useZoom } from "./useZoom";
 
 type Props = {
   container: HTMLDivElement;
@@ -29,7 +29,7 @@ const PixiStage: Component<Props> = (props) => {
     props.container.removeChild(view);
   });
 
-  createZoom({ app });
+  useZoom({ app });
 
   return (
     <PixiContextProvider app={app} onValueChange={props.onValueChange}>

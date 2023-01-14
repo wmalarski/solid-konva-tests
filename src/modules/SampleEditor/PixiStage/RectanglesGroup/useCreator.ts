@@ -12,8 +12,12 @@ export const useCreator = () => {
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const target = drawTarget();
     if (target) {
-      const [x1, x2] = [event.global.x, target.x].sort((a, b) => a - b);
-      const [y1, y2] = [event.global.y, target.y].sort((a, b) => a - b);
+      const transform = ctx.app.stage.transform.worldTransform.clone();
+      const invTarget = transform.applyInverse(target.position);
+      const position = transform.applyInverse(event.global);
+
+      const [x1, x2] = [position.x, invTarget.x].sort((a, b) => a - b);
+      const [y1, y2] = [position.y, invTarget.y].sort((a, b) => a - b);
 
       target.x = x1;
       target.y = y1;
@@ -23,9 +27,13 @@ export const useCreator = () => {
   };
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
+    const transform = ctx.app.stage.transform.worldTransform.clone();
+    const position = { x: event.globalX, y: event.globalY };
+    const inverted = transform.applyInverse(position);
+
     const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    sprite.x = event.globalX;
-    sprite.y = event.globalY;
+    sprite.x = inverted.x;
+    sprite.y = inverted.y;
     sprite.width = 0;
     sprite.height = 0;
 

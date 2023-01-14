@@ -34,7 +34,7 @@ type Props = {
   app: PIXI.Application;
 };
 
-export const createZoom = (props: Props) => {
+export const useZoom = (props: Props) => {
   const { setZoomParams, zoomParams } = useZoomParams();
 
   const resetZoom = () => {
@@ -67,9 +67,8 @@ export const createZoom = (props: Props) => {
 
   createEffect(() => {
     const state = zoomParams();
-    props.app.stage.x = state.x;
-    props.app.stage.y = state.y;
-    props.app.stage.scale.set(state.scale);
+    props.app.stage.transform.position.set(state.x, state.y);
+    props.app.stage.transform.scale.set(state.scale);
   });
 
   onMount(() => {

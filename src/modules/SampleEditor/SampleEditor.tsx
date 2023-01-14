@@ -1,6 +1,7 @@
 import { Component, createSignal, For, lazy, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
+import { SampleCard } from "./SampleCard/SampleCard";
 import { SampleEditorValue } from "./SampleEditor.utils";
 import { ToolSelector } from "./ToolSelector/ToolSelector";
 
@@ -41,7 +42,7 @@ export const SampleEditor: Component = () => {
       <div>
         <ToolSelector tool={store.tool} onValueChange={setStore} />
         <For each={store.samples}>
-          {(sample) => <pre>{JSON.stringify(sample, null, 2)}</pre>}
+          {(sample) => <SampleCard onValueChange={setStore} sample={sample} />}
         </For>
       </div>
     </section>
