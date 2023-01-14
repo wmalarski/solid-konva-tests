@@ -4,6 +4,7 @@ import { SetStoreFunction } from "solid-js/store";
 import { SampleEditorValue } from "../SampleEditor.utils";
 import { ImageSprite } from "./ImageSprite";
 import { PixiContextProvider } from "./PixiContext";
+import { RectangleBuilder } from "./RectangleBuilder";
 import { SamplesGraphics } from "./SamplesGraphics";
 
 type Props = {
@@ -32,6 +33,10 @@ const PixiStage: Component<Props> = (props) => {
     <PixiContextProvider app={app} onValueChange={props.onValueChange}>
       <ImageSprite path={props.value.path} />
       <SamplesGraphics samples={props.value.samples} tool={props.value.tool} />
+      <RectangleBuilder
+        tool={props.value.tool}
+        onValueChange={props.onValueChange}
+      />
     </PixiContextProvider>
   );
 };
