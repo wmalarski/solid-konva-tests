@@ -6,11 +6,12 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
-import { Sample, useSelectedId } from "../SampleEditor.utils";
+import { Sample, Tool, useSelectedId } from "../SampleEditor.utils";
 import { usePixiContext } from "./PixiContext";
 
 type Props = {
   sample: Sample;
+  tool: Tool;
   onDragStart: (
     target: PIXI.DisplayObject,
     callback?: (event: PIXI.FederatedPointerEvent) => void
@@ -41,27 +42,33 @@ export const Rectangle: Component<Props> = (props) => {
   });
 
   const onPointerDown = () => {
-    if (isSelected()) {
-      // TODO: fix anchor to correct position
-      props.onDragStart(sprite, () => {
-        ctx.onValueChange(
-          "samples",
-          (sample) => sample.id === props.sample.id,
-          "shape",
-          "x",
-          sprite.x
-        );
-        ctx.onValueChange(
-          "samples",
-          (sample) => sample.id === props.sample.id,
-          "shape",
-          "y",
-          sprite.y
-        );
-      });
+    if (props.tool !== "selector") {
       return;
     }
-    setSelectedId(props.sample.id);
+
+    if (!isSelected()) {
+      setSelectedId(props.sample.id);
+      return;
+    }
+
+    // TODO: fix anchor to correct position
+    props.onDragStart(sprite, () => {
+      ctx.onValueChange(
+        "samples",
+        (sample) => sample.id === props.sample.id,
+        "shape",
+        "x",
+        sprite.x
+      );
+      ctx.onValueChange(
+        "samples",
+        (sample) => sample.id === props.sample.id,
+        "shape",
+        "y",
+        sprite.y
+      );
+    });
+    return;
   };
 
   onMount(() => {
@@ -90,6 +97,10 @@ export const Rectangle: Component<Props> = (props) => {
 
   createEffect(() => {
     sprite.tint = isSelected() ? 0xff0000 : 0x000000;
+  });
+
+  createEffect(() => {
+    sprite.cursor = props.tool !== "selector" ? "default" : "pointer";
   });
 
   return null;

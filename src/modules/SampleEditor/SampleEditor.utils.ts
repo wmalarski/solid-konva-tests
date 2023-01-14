@@ -1,6 +1,8 @@
 import { useSearchParams } from "solid-start";
 import { Rectangle } from "~/utils/geometry";
 
+export type Tool = "selector" | "creator";
+
 export type Sample = {
   id: string;
   shape: Rectangle;
@@ -8,7 +10,7 @@ export type Sample = {
 
 export type SampleEditorValue = {
   path: string;
-  tool: "selector" | "creator";
+  tool: Tool;
   samples: Sample[];
 };
 

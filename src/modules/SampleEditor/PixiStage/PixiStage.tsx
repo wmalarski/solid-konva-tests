@@ -31,7 +31,7 @@ const PixiStage: Component<Props> = (props) => {
   return (
     <PixiContextProvider app={app} onValueChange={props.onValueChange}>
       <ImageSprite path={props.value.path} />
-      <SamplesGraphics samples={props.value.samples} />
+      <SamplesGraphics samples={props.value.samples} tool={props.value.tool} />
     </PixiContextProvider>
   );
 };

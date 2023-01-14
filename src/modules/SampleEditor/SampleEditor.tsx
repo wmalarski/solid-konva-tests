@@ -2,6 +2,7 @@ import { Component, createSignal, For, lazy, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { SampleEditorValue } from "./SampleEditor.utils";
+import { ToolSelector } from "./ToolSelector/ToolSelector";
 
 const PixiStage = lazy(() => import("./PixiStage/PixiStage"));
 
@@ -38,6 +39,7 @@ export const SampleEditor: Component = () => {
         </Show>
       </Show>
       <div>
+        <ToolSelector tool={store.tool} onValueChange={setStore} />
         <For each={store.samples}>
           {(sample) => <pre>{JSON.stringify(sample, null, 2)}</pre>}
         </For>
