@@ -2,13 +2,11 @@ import * as PIXI from "pixi.js";
 import { createSignal, onCleanup, onMount } from "solid-js";
 import { usePixiContext } from "../PixiContext";
 
-export const createRectangleDrag = () => {
+export const useDrag = () => {
   const ctx = usePixiContext();
 
+  const [dragId, setDragId] = createSignal<string>();
   const [dragTarget, setDragTarget] = createSignal<PIXI.DisplayObject>();
-  const [callback, setCallback] = createSignal<{
-    on?: (event: PIXI.FederatedPointerEvent) => void;
-  }>({});
 
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const target = dragTarget();
@@ -17,22 +15,33 @@ export const createRectangleDrag = () => {
     }
   };
 
-  const onDragStart = (
-    target: PIXI.DisplayObject,
-    eventCallback?: (event: PIXI.FederatedPointerEvent) => void
-  ) => {
+  const onDragStart = (target: PIXI.DisplayObject, sampleId: string) => {
+    setDragId(sampleId);
     setDragTarget(target);
-    setCallback({ on: eventCallback });
     ctx.app.stage.on("pointermove", onDragMove);
   };
 
-  const onDragEnd = (event: PIXI.FederatedPointerEvent) => {
+  const onDragEnd = () => {
+    const id = dragId();
     const target = dragTarget();
-    if (target) {
+    if (target && id) {
       ctx.app.stage.off("pointermove", onDragMove);
+      ctx.onValueChange(
+        "samples",
+        (sample) => sample.id === id,
+        "shape",
+        "x",
+        target.x
+      );
+      ctx.onValueChange(
+        "samples",
+        (sample) => sample.id === id,
+        "shape",
+        "y",
+        target.y
+      );
+      setDragId();
       setDragTarget();
-      callback().on?.(event);
-      setCallback({});
     }
   };
 

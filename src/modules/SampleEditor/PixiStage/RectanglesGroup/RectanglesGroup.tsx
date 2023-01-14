@@ -1,9 +1,9 @@
 import { Component, createEffect, For } from "solid-js";
 import { Sample, Tool } from "../../SampleEditor.utils";
-import { createRectangleDrag } from "./createRectangleDrag";
-import { Rectangle } from "./Rectangle";
+import { Rectangle } from "./Rectangle/Rectangle";
 import { useCreator } from "./useCreator";
 import { useDeselect } from "./useDeselect";
+import { useDrag } from "./useDrag";
 
 type Props = {
   samples: Sample[];
@@ -19,7 +19,7 @@ export const RectanglesGroup: Component<Props> = (props) => {
     }
   });
 
-  const { onDragStart } = createRectangleDrag();
+  const { onDragStart } = useDrag();
 
   return (
     <For each={props.samples}>
