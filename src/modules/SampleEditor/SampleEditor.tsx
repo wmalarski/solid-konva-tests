@@ -13,12 +13,10 @@ export const SampleEditor: Component = () => {
     samples: [
       {
         id: "1",
-        isSelected: false,
         shape: { height: 100, width: 150, x: 20, y: 55 },
       },
       {
         id: "2",
-        isSelected: false,
         shape: { height: 100, width: 150, x: 400, y: 205 },
       },
     ],

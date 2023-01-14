@@ -23,7 +23,6 @@ export const createDragging = () => {
     const target = dragTarget();
     if (target) {
       ctx.app.stage.off("pointermove", onDragMove);
-      target.alpha = 1;
       setDragTarget();
     }
   };

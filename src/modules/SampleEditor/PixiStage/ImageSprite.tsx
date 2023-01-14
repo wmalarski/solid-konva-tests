@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Component, createSignal, onCleanup, onMount } from "solid-js";
+import { Component, createEffect, createResource, onCleanup } from "solid-js";
 import { getImage } from "~/services/image";
 import { usePixiContext } from "./PixiContext";
 
@@ -10,21 +10,22 @@ type Props = {
 export const ImageSprite: Component<Props> = (props) => {
   const ctx = usePixiContext();
 
-  const [sprite, setSprite] = createSignal<PIXI.Sprite>();
+  const [resource] = createResource(async () => {
+    const asset = await PIXI.Assets.load(getImage({ path: props.path }));
+    return new PIXI.Sprite(asset);
+  });
 
-  onMount(() => {
-    PIXI.Assets.load(getImage({ path: props.path })).then((value) => {
-      const sprite = new PIXI.Sprite(value);
+  createEffect(() => {
+    const sprite = resource();
+    if (sprite) {
       ctx.app.stage.addChildAt(sprite, 0);
-      setSprite(sprite);
-      return;
-    });
+    }
   });
 
   onCleanup(() => {
-    const child = sprite();
-    if (child) {
-      ctx.app.stage.removeChild(child);
+    const sprite = resource();
+    if (sprite) {
+      ctx.app.stage.removeChild(sprite);
     }
   });
 
