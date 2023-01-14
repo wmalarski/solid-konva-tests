@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Component } from "solid-js";
-import { SetStoreFunction } from "solid-js/store";
-import { SampleEditorValue, Tool, useSelectedId } from "../SampleEditor.utils";
+import { Tool, useSelectedId } from "../Workspace.utils";
+import { useWorkspaceContext } from "../WorkspaceContext";
 
 type Props = {
   tool: Tool;
-  onValueChange: SetStoreFunction<SampleEditorValue>;
 };
 
 export const ToolSelector: Component<Props> = (props) => {
+  const workspace = useWorkspaceContext();
   const { setSelectedId } = useSelectedId();
 
   const handleChange = (tool: Tool) => {
-    props.onValueChange("tool", tool);
+    workspace.onChange("tool", tool);
     setSelectedId();
   };
 

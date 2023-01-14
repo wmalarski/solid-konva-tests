@@ -1,15 +1,16 @@
 import { Component } from "solid-js";
-import { SetStoreFunction } from "solid-js/store";
-import { Sample, SampleEditorValue } from "../SampleEditor.utils";
+import { Sample } from "../Workspace.utils";
+import { useWorkspaceContext } from "../WorkspaceContext";
 
 type Props = {
   sample: Sample;
-  onValueChange: SetStoreFunction<SampleEditorValue>;
 };
 
 export const SampleCard: Component<Props> = (props) => {
+  const workspace = useWorkspaceContext();
+
   const onRemoveClick = () => {
-    props.onValueChange("samples", (samples) =>
+    workspace.onChange("samples", (samples) =>
       samples.filter((sample) => sample.id !== props.sample.id)
     );
   };

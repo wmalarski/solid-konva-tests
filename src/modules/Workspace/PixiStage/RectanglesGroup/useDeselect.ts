@@ -1,23 +1,23 @@
 import * as PIXI from "pixi.js";
 import { onCleanup, onMount } from "solid-js";
-import { useSelectedId } from "../../SampleEditor.utils";
+import { useSelectedId } from "../../Workspace.utils";
 import { usePixiContext } from "../PixiContext";
 
 export const useDeselect = () => {
-  const ctx = usePixiContext();
+  const pixi = usePixiContext();
   const { setSelectedId } = useSelectedId();
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
-    if (event.target === ctx.app.stage) {
+    if (event.target === pixi.app.stage) {
       setSelectedId();
     }
   };
 
   onMount(() => {
-    ctx.app.stage.on("pointerdown", onPointerDown);
+    pixi.app.stage.on("pointerdown", onPointerDown);
   });
 
   onCleanup(() => {
-    ctx.app.stage.off("pointerdown", onPointerDown);
+    pixi.app.stage.off("pointerdown", onPointerDown);
   });
 };

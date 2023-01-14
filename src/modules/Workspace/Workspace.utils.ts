@@ -27,12 +27,6 @@ export type ZoomParams = {
   scale: number;
 };
 
-export const useParamsState = () => {
-  const [params, setParams] = useSearchParams<Params>();
-
-  return { params, setParams };
-};
-
 export const useSelectedId = () => {
   const [params, setParams] = useSearchParams<Params>();
 

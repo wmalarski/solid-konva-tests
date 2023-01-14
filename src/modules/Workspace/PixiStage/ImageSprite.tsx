@@ -8,7 +8,7 @@ type Props = {
 };
 
 export const ImageSprite: Component<Props> = (props) => {
-  const ctx = usePixiContext();
+  const pixi = usePixiContext();
 
   const [resource] = createResource(async () => {
     const asset = await PIXI.Assets.load(getImage({ path: props.path }));
@@ -18,14 +18,14 @@ export const ImageSprite: Component<Props> = (props) => {
   createEffect(() => {
     const sprite = resource();
     if (sprite) {
-      ctx.app.stage.addChildAt(sprite, 0);
+      pixi.app.stage.addChildAt(sprite, 0);
     }
   });
 
   onCleanup(() => {
     const sprite = resource();
     if (sprite) {
-      ctx.app.stage.removeChild(sprite);
+      pixi.app.stage.removeChild(sprite);
     }
   });
 

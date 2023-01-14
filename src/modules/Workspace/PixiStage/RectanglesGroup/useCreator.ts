@@ -1,10 +1,12 @@
 import * as PIXI from "pixi.js";
 import { createSignal, onCleanup, onMount } from "solid-js";
-import { Sample, useSelectedId } from "../../SampleEditor.utils";
+import { Sample, useSelectedId } from "../../Workspace.utils";
+import { useWorkspaceContext } from "../../WorkspaceContext";
 import { usePixiContext } from "../PixiContext";
 
 export const useCreator = () => {
-  const ctx = usePixiContext();
+  const pixi = usePixiContext();
+  const workspace = useWorkspaceContext();
   const { setSelectedId } = useSelectedId();
 
   const [drawTarget, setDrawTarget] = createSignal<PIXI.Sprite>();
@@ -12,7 +14,7 @@ export const useCreator = () => {
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const target = drawTarget();
     if (target) {
-      const transform = ctx.app.stage.transform.worldTransform.clone();
+      const transform = pixi.app.stage.transform.worldTransform.clone();
       const invTarget = transform.applyInverse(target.position);
       const position = transform.applyInverse(event.global);
 
@@ -27,7 +29,7 @@ export const useCreator = () => {
   };
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
-    const transform = ctx.app.stage.transform.worldTransform.clone();
+    const transform = pixi.app.stage.transform.worldTransform.clone();
     const position = { x: event.globalX, y: event.globalY };
     const inverted = transform.applyInverse(position);
 
@@ -37,8 +39,8 @@ export const useCreator = () => {
     sprite.width = 0;
     sprite.height = 0;
 
-    ctx.app.stage.addChild(sprite);
-    ctx.app.stage.on("pointermove", onDragMove);
+    pixi.app.stage.addChild(sprite);
+    pixi.app.stage.on("pointermove", onDragMove);
 
     setDrawTarget(sprite);
   };
@@ -46,8 +48,8 @@ export const useCreator = () => {
   const onDragEnd = () => {
     const target = drawTarget();
     if (target) {
-      ctx.app.stage.off("pointermove", onDragMove);
-      ctx.app.stage.removeChild(target);
+      pixi.app.stage.off("pointermove", onDragMove);
+      pixi.app.stage.removeChild(target);
 
       setDrawTarget();
 
@@ -63,21 +65,21 @@ export const useCreator = () => {
 
       setSelectedId(newSample.id);
 
-      ctx.onValueChange("samples", (samples) => [...samples, newSample]);
-      ctx.onValueChange("tool", "selector");
+      workspace.onChange("samples", (samples) => [...samples, newSample]);
+      workspace.onChange("tool", "selector");
     }
   };
 
   onMount(() => {
-    ctx.app.stage.on("pointerdown", onPointerDown);
-    ctx.app.stage.on("pointerup", onDragEnd);
-    ctx.app.stage.on("pointerupoutside", onDragEnd);
+    pixi.app.stage.on("pointerdown", onPointerDown);
+    pixi.app.stage.on("pointerup", onDragEnd);
+    pixi.app.stage.on("pointerupoutside", onDragEnd);
   });
 
   onCleanup(() => {
-    ctx.app.stage.off("pointerdown", onPointerDown);
-    ctx.app.stage.off("pointerup", onDragEnd);
-    ctx.app.stage.off("pointerupoutside", onDragEnd);
+    pixi.app.stage.off("pointerdown", onPointerDown);
+    pixi.app.stage.off("pointerup", onDragEnd);
+    pixi.app.stage.off("pointerupoutside", onDragEnd);
   });
 
   return null;

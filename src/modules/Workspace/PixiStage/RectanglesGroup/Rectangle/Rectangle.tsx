@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Component, createEffect, onCleanup, onMount } from "solid-js";
-import { Sample, Tool, useSelectedId } from "../../../SampleEditor.utils";
+import { Sample, Tool, useSelectedId } from "../../../Workspace.utils";
 import { usePixiContext } from "../../PixiContext";
 import { useDragStart } from "./useDragStart";
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const Rectangle: Component<Props> = (props) => {
-  const ctx = usePixiContext();
+  const pixi = usePixiContext();
   const { selectedId } = useSelectedId();
 
   const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
@@ -22,11 +22,11 @@ export const Rectangle: Component<Props> = (props) => {
   sprite.anchor.set(0.5);
 
   onMount(() => {
-    ctx.app.stage.addChild(sprite);
+    pixi.app.stage.addChild(sprite);
   });
 
   onCleanup(() => {
-    ctx.app.stage.removeChild(sprite);
+    pixi.app.stage.removeChild(sprite);
   });
 
   createEffect(() => {

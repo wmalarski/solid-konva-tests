@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { createEffect, onCleanup, onMount } from "solid-js";
 import { Point2D } from "~/utils/geometry";
-import { useZoomParams } from "../SampleEditor.utils";
+import { useZoomParams } from "../Workspace.utils";
 
 const scaleBy = 1.1;
 

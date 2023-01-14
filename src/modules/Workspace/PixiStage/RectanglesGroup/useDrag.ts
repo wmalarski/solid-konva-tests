@@ -1,9 +1,11 @@
 import * as PIXI from "pixi.js";
 import { createSignal, onCleanup, onMount } from "solid-js";
+import { useWorkspaceContext } from "../../WorkspaceContext";
 import { usePixiContext } from "../PixiContext";
 
 export const useDrag = () => {
-  const ctx = usePixiContext();
+  const pixi = usePixiContext();
+  const workspace = useWorkspaceContext();
 
   const [dragId, setDragId] = createSignal<string>();
   const [dragTarget, setDragTarget] = createSignal<PIXI.DisplayObject>();
@@ -18,22 +20,22 @@ export const useDrag = () => {
   const onDragStart = (target: PIXI.DisplayObject, sampleId: string) => {
     setDragId(sampleId);
     setDragTarget(target);
-    ctx.app.stage.on("pointermove", onDragMove);
+    pixi.app.stage.on("pointermove", onDragMove);
   };
 
   const onDragEnd = () => {
     const id = dragId();
     const target = dragTarget();
     if (target && id) {
-      ctx.app.stage.off("pointermove", onDragMove);
-      ctx.onValueChange(
+      pixi.app.stage.off("pointermove", onDragMove);
+      workspace.onChange(
         "samples",
         (sample) => sample.id === id,
         "shape",
         "x",
         target.x
       );
-      ctx.onValueChange(
+      workspace.onChange(
         "samples",
         (sample) => sample.id === id,
         "shape",
@@ -46,13 +48,13 @@ export const useDrag = () => {
   };
 
   onMount(() => {
-    ctx.app.stage.on("pointerup", onDragEnd);
-    ctx.app.stage.on("pointerupoutside", onDragEnd);
+    pixi.app.stage.on("pointerup", onDragEnd);
+    pixi.app.stage.on("pointerupoutside", onDragEnd);
   });
 
   onCleanup(() => {
-    ctx.app.stage.off("pointerup", onDragEnd);
-    ctx.app.stage.off("pointerupoutside", onDragEnd);
+    pixi.app.stage.off("pointerup", onDragEnd);
+    pixi.app.stage.off("pointerupoutside", onDragEnd);
   });
 
   return { onDragStart };

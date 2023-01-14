@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { onCleanup, onMount } from "solid-js";
-import { useSelectedId } from "../../../SampleEditor.utils";
+import { useSelectedId } from "../../../Workspace.utils";
 
 type Props = {
   sampleId: string;

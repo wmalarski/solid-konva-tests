@@ -1,5 +1,5 @@
 import { Component, createEffect, For } from "solid-js";
-import { Sample, Tool } from "../../SampleEditor.utils";
+import { Sample, Tool } from "../../Workspace.utils";
 import { Rectangle } from "./Rectangle/Rectangle";
 import { useCreator } from "./useCreator";
 import { useDeselect } from "./useDeselect";

@@ -2,12 +2,13 @@ import { Component, createSignal, For, lazy, Show } from "solid-js";
 import { createStore } from "solid-js/store";
 import { isServer } from "solid-js/web";
 import { SampleCard } from "./SampleCard/SampleCard";
-import { SampleEditorValue } from "./SampleEditor.utils";
 import { ToolSelector } from "./ToolSelector/ToolSelector";
+import { SampleEditorValue } from "./Workspace.utils";
+import { WorkspaceContextProvider } from "./WorkspaceContext";
 
 const PixiStage = lazy(() => import("./PixiStage/PixiStage"));
 
-export const SampleEditor: Component = () => {
+export const Workspace: Component = () => {
   const [container, setContainer] = createSignal<HTMLDivElement>();
 
   const [store, setStore] = createStore<SampleEditorValue>({
@@ -26,25 +27,21 @@ export const SampleEditor: Component = () => {
   });
 
   return (
-    <section class="flex grow flex-row border-2">
-      <Show when={!isServer}>
-        <div ref={setContainer} class="grow" />
-        <Show when={container()} keyed>
-          {(element) => (
-            <PixiStage
-              container={element}
-              value={store}
-              onValueChange={setStore}
-            />
-          )}
+    <WorkspaceContextProvider onChange={setStore}>
+      <section class="flex grow flex-row border-2">
+        <Show when={!isServer}>
+          <div ref={setContainer} class="grow" />
+          <Show when={container()} keyed>
+            {(element) => <PixiStage container={element} value={store} />}
+          </Show>
         </Show>
-      </Show>
-      <div>
-        <ToolSelector tool={store.tool} onValueChange={setStore} />
-        <For each={store.samples}>
-          {(sample) => <SampleCard onValueChange={setStore} sample={sample} />}
-        </For>
-      </div>
-    </section>
+        <div>
+          <ToolSelector tool={store.tool} />
+          <For each={store.samples}>
+            {(sample) => <SampleCard sample={sample} />}
+          </For>
+        </div>
+      </section>
+    </WorkspaceContextProvider>
   );
 };
