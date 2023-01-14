@@ -14,6 +14,8 @@ type Props = {
 
 const PixiStage: Component<Props> = (props) => {
   const app = new PIXI.Application();
+  app.stage.interactive = true;
+  app.stage.hitArea = app.screen;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const view = app.view as any as Node;

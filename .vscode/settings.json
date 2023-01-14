@@ -4,6 +4,7 @@
     "daisyui",
     "konva",
     "Pixi",
+    "pointerupoutside",
     "solidjs",
     "tailwindcss",
     "transformend",
