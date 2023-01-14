@@ -3,6 +3,7 @@ import { Component, onCleanup, onMount } from "solid-js";
 import { SetStoreFunction } from "solid-js/store";
 import { SampleEditorValue } from "../SampleEditor.utils";
 import { ImageSprite } from "./ImageSprite";
+import { SamplesGraphics } from "./SamplesGraphics";
 
 type Props = {
   container: HTMLDivElement;
@@ -24,12 +25,17 @@ const PixiStage: Component<Props> = (props) => {
     props.container.removeChild(view);
   });
 
+  const graphics = new PIXI.Graphics();
+
+  onMount(() => {
+    app.stage.addChild(graphics);
+  });
+
   return (
-    <ImageSprite
-      app={app}
-      onValueChange={props.onValueChange}
-      value={props.value}
-    />
+    <>
+      <ImageSprite app={app} value={props.value} />
+      <SamplesGraphics app={app} />
+    </>
   );
 };
 
