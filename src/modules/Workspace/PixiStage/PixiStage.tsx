@@ -4,6 +4,8 @@ import { SampleEditorValue } from "../Workspace.utils";
 import { ImageSprite } from "./ImageSprite";
 import { PixiContextProvider } from "./PixiContext";
 import { RectanglesGroup } from "./RectanglesGroup/RectanglesGroup";
+import { usePane } from "./usePane";
+import { useWheel } from "./useWheel";
 import { useZoom } from "./useZoom";
 
 type Props = {
@@ -28,6 +30,8 @@ const PixiStage: Component<Props> = (props) => {
   });
 
   useZoom({ app });
+  usePane({ app });
+  useWheel({ app });
 
   return (
     <PixiContextProvider app={app}>
