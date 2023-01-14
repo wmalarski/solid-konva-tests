@@ -11,7 +11,10 @@ import { usePixiContext } from "./PixiContext";
 
 type Props = {
   sample: Sample;
-  onDragStart: (target: PIXI.DisplayObject) => void;
+  onDragStart: (
+    target: PIXI.DisplayObject,
+    callback?: (event: PIXI.FederatedPointerEvent) => void
+  ) => void;
 };
 
 export const Rectangle: Component<Props> = (props) => {
@@ -40,7 +43,22 @@ export const Rectangle: Component<Props> = (props) => {
   const onPointerDown = () => {
     if (isSelected()) {
       // TODO: fix anchor to correct position
-      props.onDragStart(sprite);
+      props.onDragStart(sprite, () => {
+        ctx.onValueChange(
+          "samples",
+          (sample) => sample.id === props.sample.id,
+          "shape",
+          "x",
+          sprite.x
+        );
+        ctx.onValueChange(
+          "samples",
+          (sample) => sample.id === props.sample.id,
+          "shape",
+          "y",
+          sprite.y
+        );
+      });
       return;
     }
     setSelectedId(props.sample.id);

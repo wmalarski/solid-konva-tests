@@ -6,6 +6,9 @@ export const createDragging = () => {
   const ctx = usePixiContext();
 
   const [dragTarget, setDragTarget] = createSignal<PIXI.DisplayObject>();
+  const [callback, setCallback] = createSignal<{
+    on?: (event: PIXI.FederatedPointerEvent) => void;
+  }>({});
 
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const target = dragTarget();
@@ -14,16 +17,22 @@ export const createDragging = () => {
     }
   };
 
-  const onDragStart = (target: PIXI.DisplayObject) => {
+  const onDragStart = (
+    target: PIXI.DisplayObject,
+    eventCallback?: (event: PIXI.FederatedPointerEvent) => void
+  ) => {
     setDragTarget(target);
+    setCallback({ on: eventCallback });
     ctx.app.stage.on("pointermove", onDragMove);
   };
 
-  const onDragEnd = () => {
+  const onDragEnd = (event: PIXI.FederatedPointerEvent) => {
     const target = dragTarget();
     if (target) {
       ctx.app.stage.off("pointermove", onDragMove);
       setDragTarget();
+      callback().on?.(event);
+      setCallback({});
     }
   };
 
