@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { createSignal, onCleanup, onMount } from "solid-js";
-import { usePixiContext } from "./PixiContext";
+import { usePixiContext } from "../PixiContext";
 
-export const createDragging = () => {
+export const createRectangleDrag = () => {
   const ctx = usePixiContext();
 
   const [dragTarget, setDragTarget] = createSignal<PIXI.DisplayObject>();

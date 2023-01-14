@@ -6,8 +6,8 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
-import { Sample, Tool, useSelectedId } from "../SampleEditor.utils";
-import { usePixiContext } from "./PixiContext";
+import { Sample, Tool, useSelectedId } from "../../SampleEditor.utils";
+import { usePixiContext } from "../PixiContext";
 
 type Props = {
   sample: Sample;

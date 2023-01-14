@@ -1,18 +1,9 @@
 import * as PIXI from "pixi.js";
-import { Component, createSignal, onCleanup, onMount } from "solid-js";
-import { SetStoreFunction } from "solid-js/store";
-import {
-  Sample,
-  SampleEditorValue,
-  useSelectedId,
-} from "../SampleEditor.utils";
-import { usePixiContext } from "./PixiContext";
+import { createSignal, onCleanup, onMount } from "solid-js";
+import { Sample, useSelectedId } from "../../SampleEditor.utils";
+import { usePixiContext } from "../PixiContext";
 
-type Props = {
-  onValueChange: SetStoreFunction<SampleEditorValue>;
-};
-
-export const RectangleBuilder: Component<Props> = (props) => {
+export const useCreator = () => {
   const ctx = usePixiContext();
   const { setSelectedId } = useSelectedId();
 
@@ -64,8 +55,8 @@ export const RectangleBuilder: Component<Props> = (props) => {
 
       setSelectedId(newSample.id);
 
-      props.onValueChange("samples", (samples) => [...samples, newSample]);
-      props.onValueChange("tool", "selector");
+      ctx.onValueChange("samples", (samples) => [...samples, newSample]);
+      ctx.onValueChange("tool", "selector");
     }
   };
 

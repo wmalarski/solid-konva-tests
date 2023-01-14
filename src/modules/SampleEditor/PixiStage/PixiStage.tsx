@@ -5,8 +5,7 @@ import { SampleEditorValue } from "../SampleEditor.utils";
 import { createZoom } from "./createZoom";
 import { ImageSprite } from "./ImageSprite";
 import { PixiContextProvider } from "./PixiContext";
-import { RectangleBuilder } from "./RectangleBuilder";
-import { SamplesGraphics } from "./SamplesGraphics";
+import { RectanglesGroup } from "./RectanglesGroup/RectanglesGroup";
 
 type Props = {
   container: HTMLDivElement;
@@ -35,10 +34,7 @@ const PixiStage: Component<Props> = (props) => {
   return (
     <PixiContextProvider app={app} onValueChange={props.onValueChange}>
       <ImageSprite path={props.value.path} />
-      <SamplesGraphics samples={props.value.samples} tool={props.value.tool} />
-      {props.value.tool === "creator" ? (
-        <RectangleBuilder onValueChange={props.onValueChange} />
-      ) : null}
+      <RectanglesGroup samples={props.value.samples} tool={props.value.tool} />
     </PixiContextProvider>
   );
 };

@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { onCleanup, onMount } from "solid-js";
-import { useSelectedId } from "../SampleEditor.utils";
-import { usePixiContext } from "./PixiContext";
+import { useSelectedId } from "../../SampleEditor.utils";
+import { usePixiContext } from "../PixiContext";
 
 export const useDeselect = () => {
   const ctx = usePixiContext();
