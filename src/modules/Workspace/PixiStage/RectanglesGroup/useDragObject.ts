@@ -7,7 +7,7 @@ type Props = {
   onDragEnd?: (event: PIXI.FederatedMouseEvent) => void;
   onDragMove?: (event: PIXI.FederatedMouseEvent) => void;
   onDragStart?: (event: PIXI.FederatedMouseEvent) => void;
-  sprite: PIXI.DisplayObject;
+  displayObject: PIXI.DisplayObject;
 };
 
 export const useDragObject = (props: Props) => {
@@ -21,10 +21,14 @@ export const useDragObject = (props: Props) => {
       return;
     }
 
-    props.sprite.parent.toLocal(event.global, undefined, props.sprite.position);
-    props.sprite.position.set(
-      props.sprite.x - point.x,
-      props.sprite.y - point.y
+    props.displayObject.parent.toLocal(
+      event.global,
+      undefined,
+      props.displayObject.position
+    );
+    props.displayObject.position.set(
+      props.displayObject.x - point.x,
+      props.displayObject.y - point.y
     );
 
     props.onDragMove?.(event);
@@ -39,8 +43,8 @@ export const useDragObject = (props: Props) => {
     const inverted = transform.applyInverse(event.global);
 
     setShift({
-      x: inverted.x - props.sprite.x,
-      y: inverted.y - props.sprite.y,
+      x: inverted.x - props.displayObject.x,
+      y: inverted.y - props.displayObject.y,
     });
 
     pixi.app.stage.on("pointermove", onDragMove);
@@ -48,11 +52,11 @@ export const useDragObject = (props: Props) => {
   };
 
   onMount(() => {
-    props.sprite.on("pointerdown", onPointerDown);
+    props.displayObject.on("pointerdown", onPointerDown);
   });
 
   onCleanup(() => {
-    props.sprite.off("pointerdown", onPointerDown);
+    props.displayObject.off("pointerdown", onPointerDown);
   });
 
   createEffect(() => {
