@@ -2,6 +2,7 @@ import { Component, createEffect, For } from "solid-js";
 import { Sample, Tool } from "../../Workspace.utils";
 import { Rectangle } from "./Rectangle/Rectangle";
 import { useCreator } from "./useCreator";
+import { useDeselect } from "./useDeselect";
 import { useDrag } from "./useDrag";
 
 type Props = {
@@ -12,7 +13,7 @@ type Props = {
 export const RectanglesGroup: Component<Props> = (props) => {
   createEffect(() => {
     if (props.tool === "selector") {
-      // useDeselect();
+      useDeselect();
     } else if (props.tool === "creator") {
       useCreator();
     }

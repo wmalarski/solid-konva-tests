@@ -11,7 +11,11 @@ type Props = {
 export const useDragStart = (props: Props) => {
   const { selectedId, setSelectedId } = useSelectedId();
 
-  const onPointerDown = () => {
+  const onPointerDown = (event: PIXI.FederatedMouseEvent) => {
+    if (event.button === 2) {
+      return;
+    }
+
     if (selectedId() !== props.sampleId) {
       setSelectedId(props.sampleId);
     }

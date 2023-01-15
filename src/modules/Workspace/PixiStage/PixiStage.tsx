@@ -5,6 +5,7 @@ import { ImageSprite } from "./ImageSprite";
 import { PixiContextProvider } from "./PixiContext";
 import { RectanglesGroup } from "./RectanglesGroup/RectanglesGroup";
 import { usePane } from "./usePane";
+import { usePreventMenu } from "./usePreventMenu";
 import { useWheel } from "./useWheel";
 import { useZoom } from "./useZoom";
 
@@ -32,6 +33,7 @@ const PixiStage: Component<Props> = (props) => {
   useZoom({ app });
   usePane({ app });
   useWheel({ app });
+  usePreventMenu();
 
   return (
     <PixiContextProvider app={app}>

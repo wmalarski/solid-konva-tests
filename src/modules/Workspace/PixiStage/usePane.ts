@@ -1,22 +1,20 @@
 import * as PIXI from "pixi.js";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import { Point2D } from "~/utils/geometry";
-import { useSelectedId, useZoomParams } from "../Workspace.utils";
+import { useZoomParams } from "../Workspace.utils";
 
 type Props = {
   app: PIXI.Application;
 };
 
 export const usePane = (props: Props) => {
-  const { selectedId, setSelectedId } = useSelectedId();
-
   const { setZoomParams, zoomParams } = useZoomParams();
   const [origin, setOrigin] = createSignal<Point2D>();
   const [start, setStart] = createSignal<Point2D>({ x: 0, y: 0 });
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
-    if (event.target === props.app.stage) {
-      setSelectedId();
+    if (event.button !== 2) {
+      return;
     }
 
     const zoom = zoomParams();
@@ -34,7 +32,7 @@ export const usePane = (props: Props) => {
 
   createEffect(() => {
     const originPosition = origin();
-    if (!originPosition || selectedId()) {
+    if (!originPosition) {
       return;
     }
 
