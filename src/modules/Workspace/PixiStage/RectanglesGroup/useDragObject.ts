@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
+import { Point2D } from "~/utils/geometry";
 import { usePixiContext } from "../PixiContext";
 
 type Props = {
@@ -12,10 +13,20 @@ type Props = {
 export const useDragObject = (props: Props) => {
   const pixi = usePixiContext();
 
-  const [isDragging, setIsDragging] = createSignal(false);
+  const [shift, setShift] = createSignal<Point2D>();
 
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
+    const point = shift();
+    if (!point) {
+      return;
+    }
+
     props.sprite.parent.toLocal(event.global, undefined, props.sprite.position);
+    props.sprite.position.set(
+      props.sprite.x - point.x,
+      props.sprite.y - point.y
+    );
+
     props.onDragMove?.(event);
   };
 
@@ -23,7 +34,15 @@ export const useDragObject = (props: Props) => {
     if (event.button === 2) {
       return;
     }
-    setIsDragging(true);
+
+    const transform = pixi.app.stage.transform.worldTransform;
+    const inverted = transform.applyInverse(event.global);
+
+    setShift({
+      x: inverted.x - props.sprite.x,
+      y: inverted.y - props.sprite.y,
+    });
+
     pixi.app.stage.on("pointermove", onDragMove);
     props.onDragStart?.(event);
   };
@@ -37,13 +56,13 @@ export const useDragObject = (props: Props) => {
   });
 
   createEffect(() => {
-    if (!isDragging()) {
+    if (!shift()) {
       return;
     }
 
     const onDragEnd = (event: PIXI.FederatedMouseEvent) => {
       pixi.app.stage.off("pointermove", onDragMove);
-      setIsDragging(false);
+      setShift();
       props.onDragEnd?.(event);
     };
 

@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
-import { Component, createEffect, onCleanup, onMount } from "solid-js";
+import { Component, createEffect, onCleanup, onMount, Show } from "solid-js";
 import { useWorkspaceContext } from "~/modules/Workspace/WorkspaceContext";
 import { Sample, Tool, useSelectedId } from "../../../Workspace.utils";
 import { usePixiContext } from "../../PixiContext";
 import { useDragObject } from "../useDragObject";
+import { Transformer } from "./Transformer/Transformer";
 
 type Props = {
   sample: Sample;
@@ -20,7 +21,6 @@ export const Rectangle: Component<Props> = (props) => {
   sprite.alpha = 0.3;
   sprite.interactive = true;
   sprite.cursor = "pointer";
-  sprite.anchor.set(0.5);
 
   onMount(() => {
     pixi.app.stage.addChild(sprite);
@@ -84,5 +84,9 @@ export const Rectangle: Component<Props> = (props) => {
     sprite.cursor = props.tool !== "selector" ? "default" : "pointer";
   });
 
-  return null;
+  return (
+    <Show when={props.tool === "selector" && selectedId() === props.sample.id}>
+      <Transformer sample={props.sample} tool={props.tool} sprite={sprite} />
+    </Show>
+  );
 };

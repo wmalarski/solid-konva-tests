@@ -20,26 +20,23 @@ export const useCreator = () => {
       return;
     }
 
-    const transform = pixi.app.stage.transform.worldTransform.clone();
-    const position = transform.applyInverse(event.global);
+    const transform = pixi.app.stage.transform.worldTransform;
+    const inverted = transform.applyInverse(event.global);
 
-    const [x1, x2] = [position.x, start.x].sort((a, b) => a - b);
-    const [y1, y2] = [position.y, start.y].sort((a, b) => a - b);
+    const [x1, x2] = [inverted.x, start.x].sort((a, b) => a - b);
+    const [y1, y2] = [inverted.y, start.y].sort((a, b) => a - b);
 
-    target.x = x1;
-    target.y = y1;
+    target.position.set(x1, y1);
     target.width = x2 - x1;
     target.height = y2 - y1;
   };
 
   const onPointerDown = (event: PIXI.FederatedPointerEvent) => {
-    const transform = pixi.app.stage.transform.worldTransform.clone();
-    const position = { x: event.globalX, y: event.globalY };
-    const inverted = transform.applyInverse(position).clone();
+    const transform = pixi.app.stage.transform.worldTransform;
+    const inverted = transform.applyInverse(event.global);
 
     const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-    sprite.x = inverted.x;
-    sprite.y = inverted.y;
+    sprite.position.set(inverted.x, inverted.y);
     sprite.width = 0;
     sprite.height = 0;
 
@@ -75,8 +72,8 @@ export const useCreator = () => {
         shape: {
           height: target.height,
           width: target.width,
-          x: target.x + target.width / 2,
-          y: target.y + target.height / 2,
+          x: target.x,
+          y: target.y,
         },
       };
 

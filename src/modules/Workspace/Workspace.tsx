@@ -16,7 +16,7 @@ export const Workspace: Component = () => {
     samples: [
       {
         id: "1",
-        shape: { height: 100, width: 150, x: 20, y: 55 },
+        shape: { height: 100, width: 100, x: 50, y: 50 },
       },
       {
         id: "2",

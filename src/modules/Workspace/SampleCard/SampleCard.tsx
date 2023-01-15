@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Sample, useSelectedId } from "../Workspace.utils";
 import { useWorkspaceContext } from "../WorkspaceContext";
 
@@ -27,7 +27,9 @@ export const SampleCard: Component<Props> = (props) => {
         Remove
       </button>
       <button class="btn" onClick={onSelectClick}>
-        {selectedId() === props.sample.id ? "Deselect" : "Select"}
+        <Show when={selectedId() === props.sample.id} fallback="Deselect">
+          Select
+        </Show>
       </button>
       <pre>{JSON.stringify(props.sample, null, 2)}</pre>
     </div>
