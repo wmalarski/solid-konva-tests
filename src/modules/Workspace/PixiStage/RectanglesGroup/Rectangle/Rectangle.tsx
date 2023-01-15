@@ -5,6 +5,7 @@ import { Sample, Tool, useSelectedId } from "../../../Workspace.utils";
 import { usePixiContext } from "../../PixiContext";
 import { useDragObject } from "../useDragObject";
 import { createLabel } from "./createLabel";
+import { createSprite } from "./createSprite";
 import { Transformer } from "./Transformer/Transformer";
 
 type Props = {
@@ -18,12 +19,9 @@ export const Rectangle: Component<Props> = (props) => {
   const { selectedId, setSelectedId } = useSelectedId();
 
   const container = new PIXI.Container();
-  const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
-  container.addChild(sprite);
 
-  sprite.alpha = 0.3;
-  sprite.interactive = true;
-  sprite.cursor = "pointer";
+  createLabel({ container, sample: props.sample });
+  createSprite({ container, sample: props.sample, tool: props.tool });
 
   onMount(() => {
     pixi.app.stage.addChild(container);
@@ -31,8 +29,6 @@ export const Rectangle: Component<Props> = (props) => {
   onCleanup(() => {
     pixi.app.stage.removeChild(container);
   });
-
-  createLabel({ container, sample: props.sample });
 
   createEffect(() => {
     if (props.tool !== "selector") {
@@ -70,20 +66,6 @@ export const Rectangle: Component<Props> = (props) => {
   });
   createEffect(() => {
     container.y = props.sample.shape.y;
-  });
-  createEffect(() => {
-    sprite.height = props.sample.shape.height;
-  });
-  createEffect(() => {
-    sprite.width = props.sample.shape.width;
-  });
-
-  createEffect(() => {
-    const isSelected = selectedId() === props.sample.id;
-    sprite.tint = isSelected ? 0xff0000 : 0x000000;
-  });
-  createEffect(() => {
-    sprite.cursor = props.tool !== "selector" ? "default" : "pointer";
   });
 
   return (

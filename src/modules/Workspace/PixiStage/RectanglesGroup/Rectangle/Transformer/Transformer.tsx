@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Component, onCleanup, onMount } from "solid-js";
 import { Sample, Tool } from "../../../../Workspace.utils";
+import { useDragObject } from "../../useDragObject";
 
 type Props = {
   container: PIXI.Container;
@@ -21,9 +22,18 @@ export const Transformer: Component<Props> = (props) => {
   onMount(() => {
     props.container.addChild(anchor);
   });
-
   onCleanup(() => {
     props.container.removeChild(anchor);
+  });
+
+  useDragObject({
+    displayObject: anchor,
+    onDragStart: () => {
+      console.log("onDragStart");
+    },
+    onDragEnd: () => {
+      console.log("onDragEnd");
+    },
   });
 
   return null;
