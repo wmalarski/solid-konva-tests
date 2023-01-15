@@ -3,7 +3,6 @@ import { Sample, Tool } from "../../Workspace.utils";
 import { Rectangle } from "./Rectangle/Rectangle";
 import { useCreator } from "./useCreator";
 import { useDeselect } from "./useDeselect";
-import { useDrag } from "./useDrag";
 
 type Props = {
   samples: Sample[];
@@ -19,17 +18,9 @@ export const RectanglesGroup: Component<Props> = (props) => {
     }
   });
 
-  const { onDragStart } = useDrag();
-
   return (
     <For each={props.samples}>
-      {(sample) => (
-        <Rectangle
-          onDragStart={onDragStart}
-          sample={sample}
-          tool={props.tool}
-        />
-      )}
+      {(sample) => <Rectangle sample={sample} tool={props.tool} />}
     </For>
   );
 };

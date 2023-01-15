@@ -1,18 +1,19 @@
 import * as PIXI from "pixi.js";
 import { Component, createEffect, onCleanup, onMount } from "solid-js";
+import { useWorkspaceContext } from "~/modules/Workspace/WorkspaceContext";
 import { Sample, Tool, useSelectedId } from "../../../Workspace.utils";
 import { usePixiContext } from "../../PixiContext";
-import { useDragStart } from "./useDragStart";
+import { useDragObject } from "../useDragObject";
 
 type Props = {
   sample: Sample;
   tool: Tool;
-  onDragStart: (target: PIXI.DisplayObject, sampleId: string) => void;
 };
 
 export const Rectangle: Component<Props> = (props) => {
   const pixi = usePixiContext();
-  const { selectedId } = useSelectedId();
+  const workspace = useWorkspaceContext();
+  const { selectedId, setSelectedId } = useSelectedId();
 
   const sprite = new PIXI.Sprite(PIXI.Texture.WHITE);
 
@@ -31,8 +32,30 @@ export const Rectangle: Component<Props> = (props) => {
 
   createEffect(() => {
     if (props.tool === "selector") {
-      const onDragStart = () => props.onDragStart(sprite, props.sample.id);
-      useDragStart({ onDragStart, sampleId: props.sample.id, sprite });
+      useDragObject({
+        onDragEnd: () => {
+          workspace.onChange(
+            "samples",
+            (sample) => sample.id === props.sample.id,
+            "shape",
+            "x",
+            sprite.x
+          );
+          workspace.onChange(
+            "samples",
+            (sample) => sample.id === props.sample.id,
+            "shape",
+            "y",
+            sprite.y
+          );
+        },
+        onDragStart: () => {
+          if (selectedId() !== props.sample.id) {
+            setSelectedId(props.sample.id);
+          }
+        },
+        sprite,
+      });
     }
   });
 
