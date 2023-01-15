@@ -1,7 +1,14 @@
 import * as PIXI from "pixi.js";
-import { Component, onCleanup, onMount } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+  onMount,
+} from "solid-js";
+import { Point2D } from "~/utils/geometry";
 import { Sample, Tool } from "../../../../Workspace.utils";
-import { useDragObject } from "../../useDragObject";
+import { usePixiContext } from "../../../PixiContext";
 
 type Props = {
   container: PIXI.Container;
@@ -10,6 +17,8 @@ type Props = {
 };
 
 export const Transformer: Component<Props> = (props) => {
+  const pixi = usePixiContext();
+
   const anchor = new PIXI.Sprite(PIXI.Texture.WHITE);
 
   anchor.alpha = 0.3;
@@ -26,14 +35,53 @@ export const Transformer: Component<Props> = (props) => {
     props.container.removeChild(anchor);
   });
 
-  useDragObject({
-    displayObject: anchor,
-    onDragStart: () => {
-      console.log("onDragStart");
-    },
-    onDragEnd: () => {
-      console.log("onDragEnd");
-    },
+  const [start, setStart] = createSignal<Point2D>();
+
+  const onDragMove = () => {
+    const startPoint = start();
+    if (!startPoint) {
+      return;
+    }
+  };
+
+  const onPointerDown = (event: PIXI.FederatedMouseEvent) => {
+    if (event.button === 2) {
+      return;
+    }
+
+    event.stopPropagation();
+
+    pixi.app.stage.on("pointermove", onDragMove);
+    setStart({ x: event.x, y: event.y });
+  };
+
+  onMount(() => {
+    anchor.on("pointerdown", onPointerDown);
+  });
+
+  onCleanup(() => {
+    anchor.off("pointerdown", onPointerDown);
+  });
+
+  createEffect(() => {
+    if (!start()) {
+      return;
+    }
+
+    const onDragEnd = () => {
+      pixi.app.stage.off("pointermove", onDragMove);
+      setStart();
+    };
+
+    onMount(() => {
+      pixi.app.stage.on("pointerup", onDragEnd);
+      pixi.app.stage.on("pointerupoutside", onDragEnd);
+    });
+
+    onCleanup(() => {
+      pixi.app.stage.off("pointerup", onDragEnd);
+      pixi.app.stage.off("pointerupoutside", onDragEnd);
+    });
   });
 
   return null;

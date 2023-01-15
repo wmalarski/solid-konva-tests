@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { createEffect, createSignal, onCleanup, onMount } from "solid-js";
 import { Point2D } from "~/utils/geometry";
-import { usePixiContext } from "../PixiContext";
 
 type Props = {
   onDragEnd?: (event: PIXI.FederatedMouseEvent) => void;
@@ -11,21 +10,16 @@ type Props = {
 };
 
 export const useDragObject = (props: Props) => {
-  const pixi = usePixiContext();
-
   const [shift, setShift] = createSignal<Point2D>();
 
   const onDragMove = (event: PIXI.FederatedPointerEvent) => {
     const point = shift();
-    if (!point) {
+    const parent = props.displayObject.parent;
+    if (!point || !parent) {
       return;
     }
 
-    props.displayObject.parent.toLocal(
-      event.global,
-      undefined,
-      props.displayObject.position
-    );
+    parent.toLocal(event.global, undefined, props.displayObject.position);
     props.displayObject.position.set(
       props.displayObject.x - point.x,
       props.displayObject.y - point.y
@@ -35,11 +29,14 @@ export const useDragObject = (props: Props) => {
   };
 
   const onPointerDown = (event: PIXI.FederatedMouseEvent) => {
-    if (event.button === 2) {
+    const parent = props.displayObject.parent;
+    if (event.button === 2 || !parent) {
       return;
     }
 
-    const transform = pixi.app.stage.transform.worldTransform;
+    event.stopPropagation();
+
+    const transform = parent.transform.worldTransform;
     const inverted = transform.applyInverse(event.global);
 
     setShift({
@@ -47,7 +44,7 @@ export const useDragObject = (props: Props) => {
       y: inverted.y - props.displayObject.y,
     });
 
-    pixi.app.stage.on("pointermove", onDragMove);
+    parent.on("pointermove", onDragMove);
     props.onDragStart?.(event);
   };
 
@@ -60,24 +57,25 @@ export const useDragObject = (props: Props) => {
   });
 
   createEffect(() => {
-    if (!shift()) {
+    const parent = props.displayObject.parent;
+    if (!shift() || !parent) {
       return;
     }
 
     const onDragEnd = (event: PIXI.FederatedMouseEvent) => {
-      pixi.app.stage.off("pointermove", onDragMove);
+      parent.off("pointermove", onDragMove);
       setShift();
       props.onDragEnd?.(event);
     };
 
     onMount(() => {
-      pixi.app.stage.on("pointerup", onDragEnd);
-      pixi.app.stage.on("pointerupoutside", onDragEnd);
+      parent.on("pointerup", onDragEnd);
+      parent.on("pointerupoutside", onDragEnd);
     });
 
     onCleanup(() => {
-      pixi.app.stage.off("pointerup", onDragEnd);
-      pixi.app.stage.off("pointerupoutside", onDragEnd);
+      parent.off("pointerup", onDragEnd);
+      parent.off("pointerupoutside", onDragEnd);
     });
   });
 };
