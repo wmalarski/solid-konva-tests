@@ -14,7 +14,6 @@ export const useDragStart = (props: Props) => {
   const onPointerDown = () => {
     if (selectedId() !== props.sampleId) {
       setSelectedId(props.sampleId);
-      return;
     }
 
     // TODO: fix anchor to correct position
